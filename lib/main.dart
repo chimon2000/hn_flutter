@@ -1,6 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:hn_flutter/pages/stories.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  runApp(MyApp());
+
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.white,
+      systemNavigationBarColor: Colors.white,
+      systemNavigationBarDividerColor: Colors.black,
+      systemNavigationBarIconBrightness: Brightness.dark,
+    ),
+  );
+}
 
 class MyApp extends StatelessWidget {
   @override
@@ -8,56 +21,102 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        brightness: Brightness.light,
+        primaryColor: Colors.white,
+        scaffoldBackgroundColor: Colors.white,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: HomePage(title: 'Top Stories'),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+class HomePage extends StatefulWidget {
+  HomePage({Key key, this.title}) : super(key: key);
 
   final String title;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _HomePageState createState() => _HomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
+class _HomePageState extends State<HomePage> {
+  int _currentPageIndex = 0;
+  final List<Widget> _children = [
+    Stories(storyType: 'new'),
+    Stories(storyType: 'newest'),
+    Stories(storyType: 'show'),
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        elevation: 0.0,
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.display1,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ),
+      body: Stories(storyType: 'new'), // new
+
+//      bottomNavigationBar: new BottomNav(
+//        onChange: (int selectedIndex) {
+//          setState(() {
+//            _currentPageIndex = selectedIndex;
+//          });
+//        },
+//      ),
+    );
+  }
+}
+
+class BottomNav extends StatefulWidget {
+  final void Function(int selectedIndex) onChange;
+
+  const BottomNav({
+    Key key,
+    this.onChange,
+  }) : super(key: key);
+
+  @override
+  BottomNavState createState() {
+    return new BottomNavState();
+  }
+}
+
+class BottomNavState extends State<BottomNav> {
+  int _selectedIndex = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return BottomNavigationBar(
+      items: [
+        BottomNavigationBarItem(icon: Icon(Icons.home), title: Text('Top')),
+        BottomNavigationBarItem(icon: Icon(Icons.business), title: Text('New')),
+        BottomNavigationBarItem(icon: Icon(Icons.school), title: Text('Show')),
+      ],
+      currentIndex: _selectedIndex,
+      onTap: _onItemTapped,
+    );
+  }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+    if (widget.onChange != null) {
+      widget.onChange(index);
+    }
+  }
+}
+
+class PlaceholderWidget extends StatelessWidget {
+  final Color color;
+
+  PlaceholderWidget(this.color);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: color,
     );
   }
 }
