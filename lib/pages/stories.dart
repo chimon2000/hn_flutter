@@ -81,13 +81,11 @@ class StoriesState extends State<Stories> {
                       title: tileTitle,
                       subtitle: subTitle,
                       onTap: () {
-                        Navigator.push(
-                            context,
-                            new MaterialPageRoute(
-                                builder: (context) {
-                                  return Story(story.id);
-                                },
-                                fullscreenDialog: true));
+                        Navigator.push(context, new MaterialPageRoute(
+                          builder: (context) {
+                            return Story(story.id);
+                          },
+                        ));
                       },
                     );
 

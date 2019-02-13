@@ -5,15 +5,18 @@ part 'story.g.dart';
 class Story = StoryBase with _$Story;
 
 abstract class StoryBase implements Store {
-  StoryBase(
-      {this.id,
-      this.title,
-      this.user,
-      this.timeAgo,
-      this.commentsCount,
-      this.points,
-      this.url,
-      this.content});
+  StoryBase({
+    this.id,
+    this.title,
+    this.user,
+    this.timeAgo,
+    this.commentsCount,
+    this.points,
+    this.url,
+    this.content,
+    this.markdown,
+    this.leadImageUrl,
+  });
 
   final int id;
 
@@ -40,4 +43,10 @@ abstract class StoryBase implements Store {
 
   @observable
   String content = '';
+
+  @observable
+  String markdown = '';
+
+  @observable
+  String leadImageUrl = '';
 }

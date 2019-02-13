@@ -6,6 +6,8 @@ part of 'story.dart';
 // StoreGenerator
 // **************************************************************************
 
+// ignore_for_file: non_constant_identifier_names, unnecessary_lambdas, prefer_expression_function_bodies
+
 mixin _$Story on StoryBase, Store {
   final _$titleAtom = Atom(name: 'StoryBase.title');
 
@@ -125,5 +127,35 @@ mixin _$Story on StoryBase, Store {
     mainContext.checkIfStateModificationsAreAllowed(_$contentAtom);
     super.content = value;
     _$contentAtom.reportChanged();
+  }
+
+  final _$markdownAtom = Atom(name: 'StoryBase.markdown');
+
+  @override
+  String get markdown {
+    _$markdownAtom.reportObserved();
+    return super.markdown;
+  }
+
+  @override
+  set markdown(String value) {
+    mainContext.checkIfStateModificationsAreAllowed(_$markdownAtom);
+    super.markdown = value;
+    _$markdownAtom.reportChanged();
+  }
+
+  final _$leadImageUrlAtom = Atom(name: 'StoryBase.leadImageUrl');
+
+  @override
+  String get leadImageUrl {
+    _$leadImageUrlAtom.reportObserved();
+    return super.leadImageUrl;
+  }
+
+  @override
+  set leadImageUrl(String value) {
+    mainContext.checkIfStateModificationsAreAllowed(_$leadImageUrlAtom);
+    super.leadImageUrl = value;
+    _$leadImageUrlAtom.reportChanged();
   }
 }

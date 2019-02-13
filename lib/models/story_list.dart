@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:hn_flutter/models/story.dart';
 import 'package:hnpwa_client/hnpwa_client.dart';
 import 'package:mobx/mobx.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert' as convert;
 
 part 'story_list.g.dart';
 
@@ -29,19 +33,27 @@ abstract class StoryListBase implements Store {
     this.isSelectedStoryLoading = true;
 
     var item = await client.item(id);
-
-    print('content ${item.content}');
+    print(item.url);
+    var response = item.url != null
+        ? await http.post(
+            "https://parser.chimon.net",
+            body: convert.jsonEncode({"url": item.url, "format": "markdown"}),
+            headers: {HttpHeaders.contentTypeHeader: 'application/json'},
+          )
+        : null;
+    var itemDetail = response != null ? convert.jsonDecode(response.body) : {};
 
     selectedStory.value = new Story(
-      title: item.title,
-      url: item.url,
-      user: item.user,
-      commentsCount: item.commentsCount,
-      points: item.points,
-      id: item.id,
-      timeAgo: item.timeAgo,
-      content: item.content,
-    );
+        title: item.title,
+        url: item.url,
+        user: item.user,
+        commentsCount: item.commentsCount,
+        points: item.points,
+        id: item.id,
+        timeAgo: item.timeAgo,
+        content: itemDetail['content'],
+        markdown: itemDetail['markdown'],
+        leadImageUrl: itemDetail['lead_image_url']);
 
     this.isSelectedStoryLoading = false;
   }
